@@ -82,5 +82,28 @@ window.CanvasRecorder = {
 			}
 		}
 		return arrayBlob;
+	},
+	preview: (blob, params = {}, fromEl = null) => {
+		let el = fromEl ? (typeof fromEl == "string" ? document.querySelector(fromEl) : fromEl) : document.body;
+		
+		if (/Powered-by-CanvasRecorder/i.test(blob)) {
+			let video = document.createElement("video");
+			
+			video.autoplay = params.autoplay || true;
+			video.controls = params.controls || false;
+			video.loop = params.loop || true;
+			video.style.width = params.width || "";
+			video.style.height = params.height || "";
+			video.setAttribute("class", params.class || "");
+			video.setAttribute("style", params.style || "");
+			
+			video.muted = true;
+			video.src = blob;
+			el.appendChild(video);
+		}
+		else {
+			console.error("[CanvasRecorder]", `Cannot preview video ${blob} for another src or not require "blob"`);
+			throw Error(`Cannot preview video ${blob} for another src or not require "blob"`);
+		}
 	}
 }
